@@ -4,25 +4,25 @@ from unittest.mock import AsyncMock, MagicMock
 from fastapi import HTTPException, status
 
 
-user_data_admin = {
+test_user = {
     "id": 1,
-    "username": "Tima",
-    "email": "tima@gmail.com",
-    "password": "0991112233",
-    "role": "admin",
-    "confirmed": True,
-    "avatar": "https://example.com/avatar.png",
-}
-
-user_data_not_admin = {
-    "id": 1,
-    "username": "Tima",
-    "email": "tima@gmail.com",
-    "password": "0991112233",
+    "username": "Yuliia",
+    "email": "yul@gmail.com",
+    "password": "11223344",
     "role": "user",
     "confirmed": True,
     "avatar": "https://example.com/avatar.png",
 }
+
+def test_get_me(client, get_token):
+    token = get_token
+    headers = {"Authorization": f"Bearer {token}"}
+    response = client.get("api/users/me", headers=headers)
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert data["username"] == test_user["username"]
+    assert data["email"] == test_user["email"]
+    assert "avatar" in data
 
 
 @pytest.mark.asyncio
